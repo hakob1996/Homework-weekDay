@@ -1,10 +1,7 @@
 $(document).ready(function () {
 
-//add the current date to the #current date id in the HTML//
-var dateString = moment().format("dddd, MMMM Do YYYY, h:mm a");
-$("#currentDay").html(dateString);
 
-//create html timeblocks with for loop starting at 9 am until 5pm//
+
 var scheduledHours = [];
 
 for (var hour = 9; hour < 18; hour++) {
@@ -12,30 +9,23 @@ for (var hour = 9; hour < 18; hour++) {
         hour
     }).format('h  a'));
     $('.container').append(`<div class="row time-block" data-time=${hour}> 
-       <!--hour column-->
            <div class="col-sm col-md-2 hour" data-time=${hour}> 
              <p class=dayHour>${moment({hour}).format('h  a')}</p>
            </div> 
            
-       <!--user input text area-->
            <div class="col-sm col-md-8 d-flex description" data-time=${hour}> 
              <textarea class=textArea></textarea> 
            </div> 
       
-       <!--bootstrap saveBtn-->
            <div class="col-sm col-md-2 saveBtn" data-time=${hour}>
-           <i class="far fa-save fa-2x" id=icon></i>  
+           <i class="far fa-save fa-2x" id=icon> SAVE </i>  
            </div>`);
-  //  console.log({
-  //      hour
-  //  });
 }
 
 
-//Check the hour of the current day to the hour represented in the HTML data-element to decide it's background color.
 var m = moment();
 $.each($(".time-block"), function (index, value) {
-    let dateHour = $(value).attr("data-time");
+    var dateHour = $(value).attr("data-time");
     if (Number(dateHour) === m.hour()) {
         $(this).find("textarea").addClass('present');
     } else if (Number(dateHour) < m.hour()) {
@@ -45,7 +35,6 @@ $.each($(".time-block"), function (index, value) {
     }
 });
 
-//Check for local storage to set value to the object
 let timeObject = {};
   if (localStorage.getItem('timeObject')) {
       timeObject = JSON.parse(localStorage.getItem('timeObject'));
@@ -63,27 +52,11 @@ let timeObject = {};
     };
   }
 
-//set value of timeObject to equal the user input for each row 
 $(".description").each(function(){
    $(this).find(".textArea").val(timeObject[$(this).attr("data-time")].value);
-   //console.log(this)
   });
 
- //save value to local storage on click
- $(document).on('click', '.saveBtn', function(event){
-   var data = $(this).attr("data-time") 
-    console.log('alert' + data);
-     //set timeObject time attribute
-     var timeValue = $(this).attr("data-time");
-    //set timeObject value attribute
-     var textValue = $(".time-block").find(".textArea").val();
-     timeObject[timeValue].value = textValue;
 
-  //save user input in each object to local storage
-     localStorage.setItem('timeObject', JSON.stringify(timeObject));
 
-      //console.log(textValue)
-
- });
  
 });
